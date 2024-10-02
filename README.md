@@ -5,7 +5,7 @@
 ## DO NOT USE NPM!
 
 ## Commands
-After cloning install packages:
+After cloning, install packages:
 ```
 yarn install
 ```
