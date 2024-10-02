@@ -1,91 +1,47 @@
-import {
-  Button,
-  FileButton,
-  Group,
-  Textarea,
-  Text,
-  Container,
-} from "@mantine/core";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { Button } from "@mantine/core";
+import { usePostText } from "../../api/fastapi/model";
+import { TextInput } from "./components/TextInput";
+import { WordCounter } from "./components/WordCounter";
 
 export const HomePage = (): JSX.Element => {
-  const [file, setFile] = useState<File | null>(null);
-  const resetRef = useRef<() => void>(null);
+  const createText = usePostText();
+  const [response, setResponse] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [text, setText] = useState(""); // State for text input
+  const [wordCount, setWordCount] = useState(0); // State for word count
 
-  const [text, setText] = useState("");
-
-  const countWords = (input: string) => {
-    // Trim the input and split by whitespace to count words
-    return input
-      .trim()
-      .split(/\s+/)
-      .filter((word) => word.length > 0).length;
-  };
-
-  const clearFile = () => {
-    setFile(null);
-    resetRef.current?.();
-  };
-
-  const handlePaste = async () => {
-    try {
-      const clipboardText = await navigator.clipboard.readText();
-      setText(clipboardText);
-    } catch (err) {
-      console.error("Failed to read clipboard: ", err);
-    }
+  const handlePostText = (text: string) => {
+    createText.mutate(
+      { text: text },
+      {
+        onSuccess: (data) => {
+          setResponse(JSON.stringify(data));
+          setError(null);
+        },
+        onError: (error) => {
+          setError("An error occurred!");
+          setResponse(null);
+        },
+      }
+    );
   };
 
   return (
-    <Container>
-      <Group>
-        <FileButton
-          resetRef={resetRef}
-          onChange={setFile}
-          accept=".pdf,.doc,.docx"
-        >
-          {(props) => <Button {...props}>Upload doc</Button>}
-        </FileButton>
-        <Button disabled={!file} color="red" onClick={clearFile}>
-          Reset
-        </Button>
-      </Group>
+    <>
+      <TextInput onTextChange={setText} />
 
-      {file && (
-        <Text size="sm" ta="center" mt="sm">
-          Picked file: {file.name}
-        </Text>
-      )}
+      <WordCounter text={text} onWordCountChange={setWordCount} />
 
-      <Textarea
-        label="Label"
-        placeholder="Add text here. For best results, we recommend minimum 80 words"
-        description="Description"
-        withAsterisk
-        autosize
-        minRows={2}
-        maxRows={25}
-        value={text}
-        onChange={(event) => setText(event.currentTarget.value)}
-      />
-
-      <Button onClick={handlePaste} mt="md">
-        Paste
-      </Button>
-
-      {countWords(text) > 1200 ? (
-        <Text color="red">
-          Word Count: {countWords(text)} / {1200}
-        </Text>
-      ) : (
-        <Text>
-          Word Count: {countWords(text)} / {1200}
-        </Text>
-      )}
-
-      <Button disabled={countWords(text) > 1200 || countWords(text) === 0}>
+      <Button
+        disabled={wordCount > 1200 || wordCount === 0}
+        onClick={() => handlePostText(text)}
+      >
         Analyze text
       </Button>
-    </Container>
+
+      {response && <p>Response: {response}</p>}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+    </>
   );
 };
