@@ -8,10 +8,8 @@ interface Props {
 
 type Context = {
   page: string;
-  // sideBarContent: SideBarContent;
 
   setPage: (page: string) => void;
-  // setSideBarContentStocks: (stocks: StockPurchase[]) => void;
 };
 
 export const DataContext = createContext<Context>({} as Context);
@@ -32,7 +30,6 @@ export const DataProvider = ({ children }: Props) => {
     <DataContext.Provider
       value={{
         page: page,
-        // sideBarContent: sideBarContent,
         setPage,
       }}
     >

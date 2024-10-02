@@ -1,18 +1,13 @@
 import { useState } from "react";
 
-// export type SideBarContent = {
-// };
-
 type State = {
   loading: true;
   page?: string;
-  // sideBarContent?: SideBarContent;
 };
 
 type LoadedState = {
   loading: false;
   page: string;
-  // sideBarContent: SideBarContent;
 };
 
 export function useDataState() {
@@ -26,7 +21,6 @@ export function useDataState() {
     setState({
       loading: false,
       page: "home",
-      // sideBarContent: { stocks: [] },
     });
   };
 
