@@ -37,9 +37,9 @@ export const TextInput = ({
         value={text}
         onChange={handleTextChange}
       />
-      <Button onClick={handlePaste} mt="md">
+      {/* <Button onClick={handlePaste} mt="md">
         Paste
-      </Button>
+      </Button> */}
     </>
   );
 };
