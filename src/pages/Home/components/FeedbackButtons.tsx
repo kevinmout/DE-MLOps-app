@@ -1,4 +1,4 @@
-import { Button, Group } from "@mantine/core";
+import { Button, Center, Container, Flex, Group } from "@mantine/core";
 import {
   RiEmotionHappyFill,
   RiEmotionNormalFill,
@@ -33,49 +33,108 @@ export const FeedbackButtons = (props: Props) => {
     );
   };
 
-  return (
-    <Group>
-      <Button
-        onClick={() =>
-          handlePostText({
-            input_text: props.text,
-            predicted_class: props.predicted_class,
-            correct_class: "positive", // Set correct class as "positive"
-          })
-        }
-        color="green"
-        size="lg"
-      >
-        <RiEmotionHappyFill size={24} />
-      </Button>
+  const renderButtons = () => {
+    switch (props.predicted_class) {
+      case "positive":
+        return (
+          <Container>
+            <Button
+              onClick={() =>
+                handlePostText({
+                  input_text: props.text,
+                  predicted_class: props.predicted_class,
+                  correct_class: "neutral", // Set correct class as "neutral"
+                })
+              }
+              color="yellow"
+              size="lg"
+            >
+              <RiEmotionNormalFill size={24} />
+            </Button>
 
-      <Button
-        onClick={() =>
-          handlePostText({
-            input_text: props.text,
-            predicted_class: props.predicted_class,
-            correct_class: "neutral", // Set correct class as "neutral"
-          })
-        }
-        color="yellow"
-        size="lg"
-      >
-        <RiEmotionNormalFill size={24} />
-      </Button>
+            <Button
+              onClick={() =>
+                handlePostText({
+                  input_text: props.text,
+                  predicted_class: props.predicted_class,
+                  correct_class: "negative", // Set correct class as "negative"
+                })
+              }
+              color="red"
+              size="lg"
+            >
+              <RiEmotionSadFill size={24} />
+            </Button>
+          </Container>
+        );
+      case "neutral":
+        return (
+          <Container>
+            <Button
+              onClick={() =>
+                handlePostText({
+                  input_text: props.text,
+                  predicted_class: props.predicted_class,
+                  correct_class: "positive", // Set correct class as "positive"
+                })
+              }
+              color="green"
+              size="lg"
+            >
+              <RiEmotionHappyFill size={24} />
+            </Button>
 
-      <Button
-        onClick={() =>
-          handlePostText({
-            input_text: props.text,
-            predicted_class: props.predicted_class,
-            correct_class: "negative", // Set correct class as "negative"
-          })
-        }
-        color="red"
-        size="lg"
-      >
-        <RiEmotionSadFill size={24} />
-      </Button>
-    </Group>
-  );
+            <Button
+              onClick={() =>
+                handlePostText({
+                  input_text: props.text,
+                  predicted_class: props.predicted_class,
+                  correct_class: "negative", // Set correct class as "negative"
+                })
+              }
+              color="red"
+              size="lg"
+            >
+              <RiEmotionSadFill size={24} />
+            </Button>
+          </Container>
+        );
+      case "negative":
+        return (
+          <Container>
+            <Button
+              onClick={() =>
+                handlePostText({
+                  input_text: props.text,
+                  predicted_class: props.predicted_class,
+                  correct_class: "positive", // Set correct class as "positive"
+                })
+              }
+              color="green"
+              size="lg"
+            >
+              <RiEmotionHappyFill size={24} />
+            </Button>
+
+            <Button
+              onClick={() =>
+                handlePostText({
+                  input_text: props.text,
+                  predicted_class: props.predicted_class,
+                  correct_class: "neutral", // Set correct class as "neutral"
+                })
+              }
+              color="yellow"
+              size="lg"
+            >
+              <RiEmotionNormalFill size={24} />
+            </Button>
+          </Container>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return <Flex direction={"column"}>{renderButtons()}</Flex>;
 };

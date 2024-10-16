@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@mantine/core";
+import { Button, Center, Container, Paper } from "@mantine/core";
 import { usePostText } from "../../api/fastapi/model";
 import { TextInput } from "./components/TextInput";
 import { WordCounter } from "./components/WordCounter";
@@ -29,34 +29,38 @@ export const HomePage = (): JSX.Element => {
   };
 
   return (
-    <>
-      {/* Text input for user text */}
+    <Container>
       <TextInput onTextChange={setText} />
 
-      {/* Word counter to display and manage word count */}
       <WordCounter text={text} onWordCountChange={setWordCount} />
 
-      {/* Button to trigger text analysis, disabled when word count is invalid */}
       <Button
         disabled={wordCount > 1200 || wordCount === 0}
         onClick={() => {
           handlePostText(text);
-          setResponse(""); // Clear previous response when making a new request
+          setResponse("");
         }}
       >
         Analyze text
       </Button>
 
-      {/* Display the response if it's a string */}
-      {typeof response === "string" && response !== "" && (
-        <>
-          <p>Response: {response}</p>
-          <FeedbackButtons predicted_class={response} text={text} />
-        </>
-      )}
+      <Center>
+        <Paper>
+          {typeof response === "string" && response !== "" && (
+            <>
+              <p color="green">This text can be classified as: {response}</p>
+              <p>
+                Is this classified wrongly? Please indicate below what it should
+                be classified as:
+              </p>
+              <FeedbackButtons predicted_class={response} text={text} />
+            </>
+          )}
 
-      {/* Display error message if there's an error */}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
-    </>
+          {/* Display error message if there's an error */}
+          {error && <p style={{ color: "red" }}>Error: {error}</p>}
+        </Paper>
+      </Center>
+    </Container>
   );
 };
