@@ -1,27 +1,31 @@
-import { useState } from "react";
-import { Button, Center, Container, Paper } from "@mantine/core";
-import { usePostText } from "../../api/fastapi/model";
-import { TextInput } from "./components/TextInput";
-import { WordCounter } from "./components/WordCounter";
-import { FeedbackButtons } from "./components/FeedbackButtons";
+import { useState } from 'react';
+import { Button, Center, Container, Paper } from '@mantine/core';
+import { usePostText } from '../../api/fastapi/model';
+import { TextInput } from './components/TextInput';
+import { WordCounter } from './components/WordCounter';
+import { FeedbackButtons } from './components/FeedbackButtons';
 
 export const HomePage = (): JSX.Element => {
   const createText = usePostText();
+  const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | object | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [text, setText] = useState<string>(""); // State for text input
+  const [text, setText] = useState<string>(''); // State for text input
   const [wordCount, setWordCount] = useState<number>(0); // State for word count
 
   const handlePostText = (text: string) => {
+    setLoading(true);
     createText.mutate(
       { text: text },
       {
         onSuccess: (data) => {
+          setLoading(false);
           setResponse(data); // Set response to the received data
           setError(null); // Clear error state on success
         },
         onError: () => {
-          setError("An error occurred!"); // Set error message
+          setLoading(false);
+          setError('An error occurred!'); // Set error message
           setResponse(null); // Clear the response
         },
       }
@@ -35,10 +39,11 @@ export const HomePage = (): JSX.Element => {
       <WordCounter text={text} onWordCountChange={setWordCount} />
 
       <Button
+        loading={loading}
         disabled={wordCount > 1200 || wordCount === 0}
         onClick={() => {
           handlePostText(text);
-          setResponse("");
+          setResponse('');
         }}
       >
         Analyze text
@@ -46,9 +51,9 @@ export const HomePage = (): JSX.Element => {
 
       <Center>
         <Paper>
-          {typeof response === "string" && response !== "" && (
+          {typeof response === 'string' && response !== '' && (
             <>
-              <p color="green">This text can be classified as: {response}</p>
+              <p color='green'>This text can be classified as: {response}</p>
               <p>
                 Is this classified wrongly? Please indicate below what it should
                 be classified as:
@@ -58,7 +63,7 @@ export const HomePage = (): JSX.Element => {
           )}
 
           {/* Display error message if there's an error */}
-          {error && <p style={{ color: "red" }}>Error: {error}</p>}
+          {error && <p style={{ color: 'red' }}>Error: {error}</p>}
         </Paper>
       </Center>
     </Container>
