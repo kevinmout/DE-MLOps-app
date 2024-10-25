@@ -8,7 +8,7 @@ const apiUrl = process.env["REACT_APP_BACKEND_MODEL_API_URL"];
 //    Create a new text
 // Parameters (with mutation function):
 export const usePostText = (options: any = {}) => {
-  return useCreate<TextInput>(`${apiUrl}/post/text`, options);
+  return useCreate<TextInput>(`${apiUrl}/classify/text`, options);
 };
 
 // Summary:
