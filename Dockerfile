@@ -1,7 +1,3 @@
-# start
-# build: docker build -f Dockerfile -t my-first-image:latest .
-# run: docker run -it -p 80:80 --rm my-first-image:latest
-
 FROM alpine as builder
 
 WORKDIR /app
@@ -26,5 +22,6 @@ COPY --from=builder /app/build ./build
 
 RUN yarn global add serve
 
-CMD ["yarn","serve","-s" ,"build", "-l","80"]
-EXPOSE 80
+CMD ["serve","-s","build","-l","3000"]
+
+EXPOSE 3000
