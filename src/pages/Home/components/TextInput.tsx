@@ -27,9 +27,9 @@ export const TextInput = ({
   return (
     <>
       <Textarea
-        label="Label"
+        label="Text input"
         placeholder="Add text here. For best results, we recommend minimum 80 words"
-        description="Description"
+        description="Insert text"
         withAsterisk
         autosize
         minRows={2}
