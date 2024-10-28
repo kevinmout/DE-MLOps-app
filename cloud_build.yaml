@@ -1,0 +1,38 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '-t'
+      - >-
+        ${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-app:0.0.1
+      - '--build-arg'
+      - >-
+        REACT_APP_BACKEND_MODEL_API_URL=${_BACKEND_URL}
+      - ./
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - >-
+        ${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-app:0.0.1
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    args:
+      - run
+      - deploy
+      - prediction-app
+      - '--image'
+      - >-
+        ${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-app:0.0.1
+      - '--region'
+      - us-central1
+      - '--platform'
+      - managed
+      - '--port'
+      - '3000'
+      - '--cpu'
+      - '2'
+      - '--memory'
+      - 4G
+      - '--allow-unauthenticated'
+    entrypoint: gcloud
+options:
+  logging: CLOUD_LOGGING_ONLY
