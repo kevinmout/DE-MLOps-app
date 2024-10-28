@@ -29,7 +29,7 @@ export const HomePage = (): JSX.Element => {
         },
         onError: () => {
           setLoading(false);
-          setError("An error occurred!"); // Set error message
+          setError("Try to refresh the model!"); // Set error message
           setResponse(null); // Clear the response
         },
       }
